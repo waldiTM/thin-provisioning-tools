@@ -1,0 +1,17 @@
+Source: thin-provisioning-tools
+Section: admin
+Priority: optional
+Maintainer: Bastian Blank <waldi@debian.org>
+Build-Depends: debhelper (>= 9), libboost-dev, libexpat1-dev
+Standards-Version: 3.9.4
+#Homepage: <insert the upstream URL, if relevant>
+#Vcs-Git: git://git.debian.org/collab-maint/thin-provisioning-tools.git
+#Vcs-Browser: http://git.debian.org/?p=collab-maint/thin-provisioning-tools.git;a=summary
+
+Package: thin-provisioning-tools
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Tools for manipulation thin provisioned device-mapper data
+ This package contains tools to handle meta-data from the device-mapper
+ thin target.  They can check the meta-data for consistency, repair damaged
+ information and dump or restore the meta-data to textual form.

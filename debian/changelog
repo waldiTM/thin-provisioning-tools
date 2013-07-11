@@ -1,0 +1,5 @@
+thin-provisioning-tools (0.2.1-1) unstable; urgency=low
+
+  * Initial release.
+
+ -- Bastian Blank <waldi@debian.org>  Mon, 01 Jul 2013 19:53:41 +0000
