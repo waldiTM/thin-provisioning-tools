@@ -1,12 +1,13 @@
 Source: thin-provisioning-tools
 Section: admin
 Priority: optional
-Maintainer: Bastian Blank <waldi@debian.org>
+Maintainer: Debian LVM Team <pkg-lvm-maintainers@lists.alioth.debian.org>
+Uploaders: Bastian Blank <waldi@debian.org>
 Build-Depends: debhelper (>= 9), dh-autoreconf, libboost-dev, libexpat1-dev
 Standards-Version: 3.9.4
 #Homepage: <insert the upstream URL, if relevant>
-#Vcs-Git: git://git.debian.org/collab-maint/thin-provisioning-tools.git
-#Vcs-Browser: http://git.debian.org/?p=collab-maint/thin-provisioning-tools.git;a=summary
+Vcs-Git: git://anonscm.debian.org/pkg-lvm/thin-provisioning-tools.git
+Vcs-Browser: http://anonscm.debian.org/gitweb/?p=pkg-lvm/thin-provisioning-tools.git;a=summary
 
 Package: thin-provisioning-tools
 Architecture: any
