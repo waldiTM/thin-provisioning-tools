@@ -1,0 +1,103 @@
+Description: Fix build system
+ * Make verbose enough
+ * Actually honor CPPFLAGS and LDFLAGS
+ * Never link libstdc++
+Author: Bastian Blank <waldi@debian.org>
+---
+--- a/Makefile.in
++++ b/Makefile.in
+@@ -18,7 +18,6 @@
+ 
+ .PHONY: all
+ 
+-V=@
+ PROGRAMS=\
+ 	thin_check \
+ 	thin_dump \
+@@ -77,16 +76,15 @@
+ OBJECTS:=$(subst .cc,.o,$(SOURCE))
+ TOP_DIR:=@top_srcdir@
+ TOP_BUILDDIR:=@top_builddir@
+-CXXFLAGS+=-std=c++11 -g -Wall -fno-strict-aliasing
+-CXXFLAGS+=@CXXOPTIMISE_FLAG@
+-CXXFLAGS+=@CXXDEBUG_FLAG@
++CPPFLAGS=@CPPFLAGS@
++CXXFLAGS=-std=c++11 -Wall @CXXFLAGS@
++LDFLAGS=@LDFLAGS@
+ INCLUDES+=-I$(TOP_BUILDDIR) -I$(TOP_DIR) -I$(TOP_DIR)/thin-provisioning
+-LIBS:=-lstdc++
+ LIBEXPAT:=-lexpat
+ INSTALL:=@INSTALL@
+ PREFIX:=@prefix@
+ BINDIR:=$(DESTDIR)$(PREFIX)/sbin
+-MANPATH:=$(DESTDIR)$(MANDIR)
++MANPATH:=$(DESTDIR)/usr/share/man
+ 
+ vpath %.cc $(TOP_DIR)
+ 
+@@ -105,18 +103,12 @@
+ .SUFFIXES: .d
+ 
+ %.o: %.cc
+-	@echo "    [CXX] $<"
+-	$(V) $(CXX) -c $(INCLUDES) $(CXXFLAGS) -o $@ $<
+-	@echo "    [DEP] $<"
+-	$(V) $(CXX) -MM -MT $(subst .cc,.o,$<) $(INCLUDES) $(TEST_INCLUDES) $(CXXFLAGS) $< > $*.$$$$; \
+-	sed 's,\([^ :]*\)\.o[ :]*,\1.o \1.gmo $* : Makefile ,g' < $*.$$$$ > $*.d; \
+-	$(RM) $*.$$$$
++	$(CXX) -c $(INCLUDES) $(CPPFLAGS) $(CXXFLAGS) -o $@ $<
+ 
+ #----------------------------------------------------------------
+ 
+ lib/libpdata.a: $(PDATA_OBJECTS)
+-	@echo "    [AR]  $<"
+-	$(V)ar -rv $@ $(PDATA_OBJECTS) > /dev/null 2>&1
++	ar -rv $@ $(PDATA_OBJECTS) > /dev/null 2>&1
+ 
+ #----------------------------------------------------------------
+ # Thin provisioning tools
+@@ -172,28 +164,22 @@
+ THIN_RMAP_OBJECTS=$(subst .cc,.o,$(THIN_RMAP_SOURCE))
+ 
+ thin_debug: $(THIN_DEBUG_OBJECTS) thin-provisioning/thin_debug.o
+-	@echo "    [LD]  $@"
+-	$(V) $(CXX) $(CXXFLAGS) -o $@ $+ $(LIBS) $(LIBEXPAT)
++	$(CXX) $(LDFLAGS) $(CXXFLAGS) -o $@ $+ $(LIBS) $(LIBEXPAT)
+ 
+ thin_repair: $(THIN_REPAIR_OBJECTS) thin-provisioning/thin_repair.o
+-	@echo "    [LD]  $@"
+-	$(V) $(CXX) $(CXXFLAGS) -o $@ $+ $(LIBS) $(LIBEXPAT)
++	$(CXX) $(LDFLAGS) $(CXXFLAGS) -o $@ $+ $(LIBS) $(LIBEXPAT)
+ 
+ thin_dump: $(THIN_DUMP_OBJECTS) thin-provisioning/thin_dump.o
+-	@echo "    [LD]  $@"
+-	$(V) $(CXX) $(CXXFLAGS) -o $@ $+ $(LIBS) $(LIBEXPAT)
++	$(CXX) $(LDFLAGS) $(CXXFLAGS) -o $@ $+ $(LIBS) $(LIBEXPAT)
+ 
+ thin_restore: $(THIN_RESTORE_OBJECTS) thin-provisioning/thin_restore.o
+-	@echo "    [LD]  $@"
+-	$(V) $(CXX) $(CXXFLAGS) -o $@ $+ $(LIBS) $(LIBEXPAT)
++	$(CXX) $(LDFLAGS) $(CXXFLAGS) -o $@ $+ $(LIBS) $(LIBEXPAT)
+ 
+ thin_check: $(THIN_CHECK_OBJECTS) thin-provisioning/thin_check.o
+-	@echo "    [LD]  $@"
+-	$(V) $(CXX) $(CXXFLAGS) -o $@ $+ $(LIBS)
++	$(CXX) $(LDFLAGS) $(CXXFLAGS) -o $@ $+ $(LIBS)
+ 
+ thin_rmap: $(THIN_RMAP_OBJECTS) thin-provisioning/thin_rmap.o
+-	@echo "    [LD]  $@"
+-	$(V) $(CXX) $(CXXFLAGS) -o $@ $+ $(LIBS)
++	$(CXX) $(LDFLAGS) $(CXXFLAGS) -o $@ $+ $(LIBS)
+ 
+ #----------------------------------------------------------------
+ # Cache tools
+@@ -215,8 +201,7 @@
+ CACHE_CHECK_OBJECTS=$(subst .cc,.o,$(CACHE_CHECK_SOURCE))
+ 
+ cache_check: $(CACHE_CHECK_OBJECTS) cache/check.o
+-	@echo "    [LD]  $@"
+-	$(V) $(CXX) $(CXXFLAGS) -o $@ $+ $(LIBS)
++	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -o $@ $+ $(LIBS)
+ 
+ DEPEND_FILES=\
+ 	$(subst .cc,.d,$(SOURCE)) \
