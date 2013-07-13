@@ -1,0 +1,5 @@
+autoreconf.*
+*.debhelper*
+*.substvars
+files
+thin-provisioning-tools
