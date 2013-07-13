@@ -5,14 +5,15 @@ Maintainer: Debian LVM Team <pkg-lvm-maintainers@lists.alioth.debian.org>
 Uploaders: Bastian Blank <waldi@debian.org>
 Build-Depends: debhelper (>= 9), dh-autoreconf, libboost-dev, libexpat1-dev
 Standards-Version: 3.9.4
-#Homepage: <insert the upstream URL, if relevant>
 Vcs-Git: git://anonscm.debian.org/pkg-lvm/thin-provisioning-tools.git
 Vcs-Browser: http://anonscm.debian.org/gitweb/?p=pkg-lvm/thin-provisioning-tools.git;a=summary
 
 Package: thin-provisioning-tools
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
-Description: Tools for manipulation thin provisioned device-mapper data
+Description: Tools for handling thinly provisioned device-mapper meta-data
  This package contains tools to handle meta-data from the device-mapper
- thin target.  They can check the meta-data for consistency, repair damaged
- information and dump or restore the meta-data to textual form.
+ thin target.  This target allows the use of a single backing store for multple
+ thinly provisioned volumes.  Numerous snapshots can be taken from such
+ volumes.  The tools can check the meta-data for consistency, repair damaged
+ information and dump or restore the meta-data in textual form.
